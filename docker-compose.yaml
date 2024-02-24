@@ -1,0 +1,53 @@
+version: '3'
+services:
+  comms-webapp:
+    image: comms-webapp:latest
+  helphi-svc:
+    image: helphi-svc:latest
+    depends_on:
+      - postgres
+    ports:
+    - "8080:8080"
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+  question-svc:
+    image: question-svc:latest
+    depends_on:
+      cassandra:
+        condition: service_healthy
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    entrypoint: ./entrypoint.sh
+    healthcheck:
+        test: ["CMD", "cqlsh", "-u cassandra", "-p cassandra" ,"-e describe keyspaces"]
+        interval: 15s
+        timeout: 10s
+        retries: 10
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+      - ./cassandra/init.cql:/docker-entrypoint-initdb.d/init.cql
+      - ./cassandra/entrypoint.sh:/entrypoint.sh
+    command: ["cassandra", "-f"]
+    environment:
+      - MAX_HEAP_SIZE=512M
+      - HEAP_NEWSIZE=100M
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+volumes:
+  cassandra-data:
+  postgres-data:
