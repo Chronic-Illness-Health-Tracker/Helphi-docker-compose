@@ -43,9 +43,9 @@ CREATE TABLE IF NOT EXISTS helphi.health_condition (
     CONSTRAINT fk_organisation FOREIGN KEY(organisation_id) REFERENCES helphi.organisation(id)
 );
 
-CREATE TABLE IF NOT EXISTS helphi.clinitian (
+CREATE TABLE IF NOT EXISTS helphi.clinician (
     id UUID NOT NULL DEFAULT extensions.uuid_generate_v4(),
-    user_id UUID,
+    user_id VARCHAR(45),
     organisation_id UUID,
     title USER_TITLE,
     forename VARCHAR(35),
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS helphi.gp (
 
 CREATE TABLE IF NOT EXISTS helphi.patient (
     id UUID NOT NULL DEFAULT extensions.uuid_generate_v4(),
-    user_id UUID,
+    user_id VARCHAR(45),
     nhs_number VARCHAR(10) NOT NULL,
     gp_id UUID,
     address_id UUID REFERENCES helphi.address(id),
@@ -117,4 +117,11 @@ CREATE TABLE IF NOT EXISTS helphi.condition_access_permission (
     access_level PERMISSION NOT NULL,
     PRIMARY KEY (user_id, health_condition_id),
     CONSTRAINT fk_health_condition FOREIGN KEY(health_condition_id) REFERENCES helphi.health_condition(id)
-)
+);
+
+CREATE TABLE IF NOT EXISTS helphi.user_registration (
+    id UUID NOT NULL DEFAULT extensions.uuid_generate_v4(),
+    code VARCHAR(12) NOT NULL,
+    patient_clinician_id UUID NOT NULL,
+    PRIMARY KEY (id)
+);
