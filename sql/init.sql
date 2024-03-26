@@ -17,8 +17,8 @@ CREATE TYPE user_title AS ENUM ('Mr', 'Mrs', 'Miss', 'Ms', 'Mx', 'Dr', 'Prof', '
 
 CREATE TABLE IF NOT EXISTS helphi.address (
     id UUID NOT NULL DEFAULT extensions.uuid_generate_v4(),
-    address_line_one VARCHAR(35),
-    address_line_two VARCHAR(35),
+    address_line_one VARCHAR(55),
+    address_line_two VARCHAR(55),
     postcode VARCHAR(8),
     PRIMARY KEY(id) 
 );
