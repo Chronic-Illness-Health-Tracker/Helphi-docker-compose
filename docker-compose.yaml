@@ -5,7 +5,10 @@ services:
   helphi-svc:
     image: helphi-svc:latest
     depends_on:
-      - postgres
+      question-svc:
+        condition: service_started
+      postgres:
+        condition: service_started
     ports:
     - "8080:8080"
   postgres:
@@ -23,6 +26,8 @@ services:
     depends_on:
       cassandra:
         condition: service_healthy
+    ports:
+      - "9090:9090"
   cassandra:
     image: cassandra:latest
     container_name: cassandra
