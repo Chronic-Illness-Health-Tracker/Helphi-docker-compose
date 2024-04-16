@@ -18,10 +18,10 @@ CREATE TABLE condition_check_in (
 CREATE TABLE questions_by_condition (
   question_id bigint,
   condition_id text,
+  question_text text,
   question_type text,
-  possible_answers set<text>,
+  possible_answers list<frozen<answer>>,
   answer_score_range set<int>,
-  answer_score list<int>,
   PRIMARY KEY (condition_id, question_id)
 ) WITH CLUSTERING ORDER BY (question_id DESC);
 

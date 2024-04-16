@@ -2,6 +2,14 @@ version: '3'
 services:
   comms-webapp:
     image: comms-webapp:latest
+    depends_on:
+        helphi-svc:
+          condition: service_started
+  landing-webapp:
+    image: landing-webapp:latest
+    depends_on:
+      helphi-svc:
+        condition: service_started
   helphi-svc:
     image: helphi-svc:latest
     depends_on:
@@ -11,6 +19,7 @@ services:
         condition: service_started
     ports:
     - "8080:8080"
+    - "8443:8443"
   postgres:
     image: postgres:latest
     environment:
@@ -47,10 +56,16 @@ services:
     environment:
       - MAX_HEAP_SIZE=512M
       - HEAP_NEWSIZE=100M
-  nginx:
-    image: nginx:latest
+  helphi-nginx:
+    image: helphi-nginx:latest
     ports:
       - "80:80"
+      - "443:443"
+    depends_on:
+      landing-webapp:
+            condition: service_started
+      comms-webapp:
+            condition: service_started
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
 volumes:
