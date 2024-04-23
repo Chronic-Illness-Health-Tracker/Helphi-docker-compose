@@ -29,8 +29,8 @@ CREATE TABLE user_responses_by_condition_user (
   response_id bigint,
   question_id bigint,
   condition_id text,
-  patient_id text,
-  answer answer,
+  user_id text,
+  answer list<frozen<answer>>,
   timestamp timestamp,
   PRIMARY KEY ((user_id, condition_id), response_id)
 ) WITH CLUSTERING ORDER BY (response_id DESC);

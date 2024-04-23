@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS helphi.patient (
     user_id VARCHAR(45),
     nhs_number VARCHAR(10) NOT NULL,
     gp_id UUID,
-    address_id UUID REFERENCES helphi.address(id),
+    address_id UUID,
     title USER_TITLE,
     forename VARCHAR(35),
     middlenames VARCHAR(35),
@@ -109,15 +109,6 @@ CREATE TABLE IF NOT EXISTS helphi.patient_condition_link (
     CONSTRAINT fk_health_condition FOREIGN KEY(health_condition_id) REFERENCES helphi.health_condition(id)
 );
 
-CREATE TYPE permission AS ENUM ('view', 'edit', 'admin');
-
-CREATE TABLE IF NOT EXISTS helphi.condition_access_permission (
-    user_id UUID NOT NULL,
-    health_condition_id UUID NOT NULL,
-    access_level PERMISSION NOT NULL,
-    PRIMARY KEY (user_id, health_condition_id),
-    CONSTRAINT fk_health_condition FOREIGN KEY(health_condition_id) REFERENCES helphi.health_condition(id)
-);
 
 CREATE TABLE IF NOT EXISTS helphi.user_registration (
     id UUID NOT NULL DEFAULT extensions.uuid_generate_v4(),
